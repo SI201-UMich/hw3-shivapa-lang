@@ -1,12 +1,12 @@
-# Name:
-# Student ID:
-# Email:
+# Name: Shivani Patel
+# Student ID: # 0399 0808
+# Email: shivapa@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT):
 # If you worked with generative AI also add a statement for how you used it.
-# e.g.:
+# e.g.: There were certain lines I knew what elements to use but didn't know how to format it like using join and find functions.
 # Asked ChatGPT hints for debugging and suggesting the general structure of the code
 # Did your use of GenAI on this assignment align with your goals and guidelines in 
-#    your Gen AI contract? If not, why?
+#    your Gen AI contract? If not, why? I stayed within the guidelines, I only asked for assistance not AI to write me any code itself.
 
 import random
 import io
@@ -26,14 +26,10 @@ class CouponDispenser:
     """
 
     def __init__(self, coupon_cards):
-        """
-        Initialize a new CouponDispenser object.
-
-        Args:
-            coupon_cards (list[str]): list of possible coupons users can receive.
-        """
-        # TODO: Implement per instructions
-        pass
+        self.coupon_cards = coupon_cards
+        self.customer_roster = []
+        self.issued_indices = []
+        
 
     def __str__(self):
         """
@@ -44,7 +40,10 @@ class CouponDispenser:
             str
         """
         # TODO: Implement per instructions
-        pass
+        if  self.coupon_cards == []:
+            return ""
+        else:
+            return "|".join(self.coupon_cards)
 
     def issue_coupon(self, name):
         """
@@ -61,7 +60,22 @@ class CouponDispenser:
             str: message as described above
         """
         # TODO: Implement per instructions
-        pass
+        if self.coupon_cards == []:
+            return "The box is empty."
+        
+        if name in self.customer_roster:
+            position = self.customer_roster.index(name)
+            i = self.issued_indices[position]
+            coupon = self.coupon_cards[i]
+            return f"That name already has a coupon: {coupon}"
+        else:
+            i = random.randint(0, len(self.coupon_cards) - 1)
+            self.customer_roster.append(name)
+            self.issued_indices.append(i)
+            return self.coupon_cards[i]
+        
+
+
 
     def distribute_session(self):
         """
@@ -79,7 +93,34 @@ class CouponDispenser:
         Reminder: Use lists only (no dictionaries).
         """
         # TODO: Implement per instructions 
-        pass
+        round_number = 1
+        user_input = ""
+
+        while user_input != "exit":
+            user_input = input(f"Round {round_number} - Enter a name (or a comma-separated list), or type 'show' or 'exit': ")
+            user_input = user_input.strip()
+
+            if user_input == "exit":
+                print("Goodbye!")
+                break
+            
+            elif user_input == "show":
+                for i in range(len(self.customer_roster)):
+                    name = self.customer_roster[i]
+                    position = self.issued_indices[i]
+                    coupon = self.coupon_cards[position]
+                    print(f"{name}: {coupon}")
+            else:
+                split = user_input.split(",")
+                for part in split:
+                    name = part.strip()
+                    if name != "":
+                        print(self.issue_coupon(name))
+
+            round_number += 1
+    
+
+
 
     def tally_distribution(self):
         """
@@ -97,17 +138,17 @@ class CouponDispenser:
             None
         """
         # TODO: Implement per instructions
-        pass
+        if self.issued_indices == []:
+            print("Empty")
+            return
+        else:
+            for i in range(len(self.coupon_cards)):
+                count = self.issued_indices.count(i)
+                print(f"{self.coupon_cards[i]} distribution count: {count}.")
+            return
 
 
 def main():
-    """
-    Driver function:
-      - Define the coupon_cards list (example coupons below)
-      - Create a CouponDispenser
-      - Start the interaction via distribute_session()
-      - After exit, call tally_distribution() to print the distribution in the terminal
-    """
     coupon_cards = [
         "10% off",
         "Free small coffee",
@@ -115,11 +156,9 @@ def main():
         "Free extra espresso shot",
     ]
 
-    # Uncomment the lines below as you implement each function.
-    # box = CouponDispenser(coupon_cards)
-    # box.distribute_session()
-    # box.tally_distribution()
-    pass
+    box = CouponDispenser(coupon_cards)
+    box.distribute_session()
+    box.tally_distribution()
 
 
 # -----------------------
@@ -399,5 +438,5 @@ def test():
 
 if __name__ == "__main__":
     main()
-    # test()
+    test()
 
